@@ -38,6 +38,7 @@ model User {
   cnic          String?
   hikingLevel   HikingLevel @default(BEGINNER)
   emailVerified Boolean     @default(false)
+  isAdmin   Boolean  @default(false)   
   trips         Trip[]
   joinRequests  JoinRequest[] @relation("UserJoinRequests")
 

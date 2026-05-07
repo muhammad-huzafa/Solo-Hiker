@@ -69,14 +69,13 @@ export const authOptions: NextAuthOptions = {
               id: user.id,
               email: user.email,
               name: user.name ?? "",
+             isAdmin: user.isAdmin, 
       };
       },
     }),
   ],
 
-  // PAGES: Custom URLs for auth pages
-  // By default, NextAuth creates its own ugly pages
-  // We tell it to use our beautiful custom pages instead
+
   pages: {
     signIn: "/login",      // Where to go for login
     error: "/login",       // Where to go if login fails
@@ -85,7 +84,7 @@ export const authOptions: NextAuthOptions = {
 
   // SESSION: How to store the "logged in" state
   session: {
-    // Strategy "jwt" means we use JSON Web Tokens
+    // Strategy  we use JSON Web Tokens
     // JWT is like a secure badge that proves you're logged in
     // It's stored in a cookie in the browser
     strategy: "jwt",
@@ -114,6 +113,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
+        token.isAdmin = (user as any).isAdmin; 
       }
       
       // Return the token (with user ID added)
@@ -130,6 +130,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
+       (session.user as any).isAdmin = token.isAdmin; 
       }
       
       // Return the session (with user ID added)
@@ -193,10 +194,10 @@ HOW THIS WORKS - STEP BY STEP:
 SECURITY FEATURES:
 ===========================================
 
-✅ Passwords are hashed with bcrypt (not stored in plain text)
-✅ Tokens are encrypted (can't be read or modified)
-✅ Tokens expire after 30 days (must login again)
-✅ HttpOnly cookies (JavaScript can't steal token)
-✅ CSRF protection (prevents cross-site attacks)
-✅ Secure cookies in production (only sent over HTTPS)
+ Passwords are hashed with bcrypt (not stored in plain text)
+ Tokens are encrypted (can't be read or modified)
+ Tokens expire after 30 days (must login again)
+ HttpOnly cookies (JavaScript can't steal token)
+ CSRF protection (prevents cross-site attacks)
+ Secure cookies in production (only sent over HTTPS)
 */

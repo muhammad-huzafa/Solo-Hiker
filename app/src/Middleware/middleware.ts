@@ -18,7 +18,7 @@ export default withAuth(
     const token = req.nextauth.token;
     const path = req.nextUrl.pathname;
 
-    console.log("🔐 Middleware check:", {
+    console.log(" Middleware check:", {
       path: path,
       isLoggedIn: !!token,
       userEmail: token?.email || "Not logged in",
@@ -29,7 +29,20 @@ export default withAuth(
     if (token && (path === "/login" || path === "/register")) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
     }
+    // ADMIN ROUTE PROTECTION
+    // Agar koi /admin ya uske andar kisi bhi page par jaane ki koshish kare
+   if (path.startsWith("/admin")) {
+  
+    // Logged in nahi hai bilkul → login page par bhejo
+   if (!token) {
+    return NextResponse.redirect(new URL("/login", req.url));
+     }
 
+    // Logged in hai lekin admin nahi → unke apne dashboard par bhejo
+   if (!token.isAdmin) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+}
     // Allow the request to continue
     return NextResponse.next();
   },
